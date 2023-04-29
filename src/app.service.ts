@@ -9,7 +9,7 @@ export class AppService {
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
-      .where('product.onHomePage = :onHomePage', {onHomePage:1})
+      .where('product.onHomePage = :onHomePage', { onHomePage: 1 })
       .getMany();
 
 
