@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put, Inject } fr
 import { AuthGuard } from '@nestjs/passport';
 
 import {
+  BasketFullPriceResponse,
   CreateBasketResponse, DeleteBasketResponse, DeleteManyBasketResponse,
   FindManyBasketResponse,
   FindOneBasketResponse,
@@ -38,12 +39,20 @@ export class BasketController {
     return this.basketService.findMany(user.id);
   }
 
-  @Get('/one')
+  @Get('/one/:id')
   @UseGuards(AuthGuard('jwt'))
   findOne(
-    @UserObj() user: User
+    @Param('id') id: string
   ): Promise<FindOneBasketResponse> {
-    return this.basketService.findOne(user.id);
+    return this.basketService.findOne(id);
+  }
+
+  @Get('full-price')
+  @UseGuards(AuthGuard('jwt'))
+  basketFullPrice(
+    @UserObj() user: User
+  ): Promise<BasketFullPriceResponse> {
+    return this.basketService.basketFullPrice(user.id);
   }
 
   @Put('/')
@@ -66,8 +75,8 @@ export class BasketController {
   @Delete('/:id')
   @UseGuards(AuthGuard('jwt'))
   remove(
-    @Param('/id') id: string,
-): Promise<DeleteBasketResponse> {
+    @Param('/id') id: string
+  ): Promise<DeleteBasketResponse> {
     return this.basketService.remove(id);
   }
 

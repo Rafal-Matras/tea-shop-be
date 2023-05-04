@@ -24,7 +24,7 @@ export class Basket extends BaseEntity{
   @JoinColumn()
   product:Product
 
-  @ManyToOne(type => User, entity => entity.baskets)
+  @ManyToOne(type => User, entity => entity.basket)
   @JoinColumn()
   user:User
 

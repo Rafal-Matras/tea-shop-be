@@ -56,4 +56,12 @@ export type DeleteManyBasketResponse = {
   err: string;
 };
 
+export type BasketFullPriceResponse = {
+  isSuccess: true;
+  price: number;
+} | {
+  isSuccess: false;
+  err: string;
+};
+
 

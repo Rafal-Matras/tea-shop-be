@@ -12,8 +12,8 @@ export enum Unit {
 
 export enum NumberOfUnits {
   one = 1,
-  two = 50,
-  three = 100,
+  five = 5,
+  ten = 10,
 }
 
 export enum NumberBrews {

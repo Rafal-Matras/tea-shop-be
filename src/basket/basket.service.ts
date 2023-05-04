@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateBasketDto } from './dto/create-basket.dto';
 import { UpdateBasketDto } from './dto/update-basket.dto';
 import {
+  BasketFullPriceResponse,
   CreateBasketResponse, DeleteBasketResponse, DeleteManyBasketResponse,
   FindManyBasketResponse,
   FindOneBasketResponse,
@@ -50,10 +51,11 @@ export class BasketService {
     }
   }
 
-  async findMany(id:string): Promise<FindManyBasketResponse> {
+  async findMany(id: string): Promise<FindManyBasketResponse> {
     try {
       const basket = await Basket
         .createQueryBuilder('basket')
+        .leftJoinAndSelect('basket.product', 'product')
         .where('basket.userId = :id', { id })
         .getMany();
 
@@ -157,5 +159,34 @@ export class BasketService {
     }
   }
 
+  async basketFullPrice(id: string): Promise<BasketFullPriceResponse> {
+    try {
+      const items = await this.findMany(id);
+
+      if (items.isSuccess) {
+        const price = (await Promise.all(items.basket
+          .map(async item => item.product.price * item.count * item.packSize)))
+          .reduce((prev, curr) => prev + curr, 0)
+          .toFixed(2);
+
+        return {
+          isSuccess: true,
+          price: +price
+        };
+      }
+      return {
+        isSuccess: false,
+        err: 'cos poszło nie tak spróbuj jeszcze raz'
+      };
+
+    } catch (err) {
+
+      return {
+        isSuccess: false,
+        err: err.message
+      };
+    }
+
+  }
 
 }
