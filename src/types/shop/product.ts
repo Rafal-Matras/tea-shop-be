@@ -64,4 +64,6 @@ export type RemoveProductResponse = {
   id: string
 }
 
+export type ProductInBasket = Omit<ProductInterface, 'description' | 'forGift' | 'onHomePage' | 'ingredients' | 'countryOrigin' | 'amountBrew' | 'temperatureBrew' | 'timeBrew' | 'numberBrews' | 'storageMethod' | 'coffeeSpecies' | 'howToBrew' | 'capacity' | 'size'>
+
 

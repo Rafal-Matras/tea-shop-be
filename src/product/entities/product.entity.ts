@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Category, NumberBrews, NumberOfUnits, Unit } from '../../types';
+import { Basket } from '../../basket/entities/basket.entity';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -162,5 +163,8 @@ export class Product extends BaseEntity {
     default: null
   })
   size: string;
+
+  @OneToMany(type => Basket, entity => entity.product)
+  basket:Basket
 
 }
