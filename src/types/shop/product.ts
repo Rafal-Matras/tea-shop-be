@@ -1,3 +1,5 @@
+import { Basket } from '../../basket/entities/basket.entity';
+
 export enum Category {
   tea = 'herbata',
   coffee = 'kawa',
@@ -50,19 +52,18 @@ export interface ProductInterface {
   howToBrew: string | null;
   capacity: number | null;
   size: string | null;
+  basket: Basket;
 }
 
 export type CreateProductResponse = ProductInterface;
 
-export type FindAllProductResponse = ProductInterface[];
+export type FindAllProductResponse =  ProductInterface[];
 
 export type FindOneProductResponse = ProductInterface;
 
 export type UpdateProductResponse = ProductInterface;
 
-export type RemoveProductResponse = {
-  id: string
-}
+export type RemoveProductResponse = string;
 
 export type ProductInBasket = Omit<ProductInterface, 'description' | 'forGift' | 'onHomePage' | 'ingredients' | 'countryOrigin' | 'amountBrew' | 'temperatureBrew' | 'timeBrew' | 'numberBrews' | 'storageMethod' | 'coffeeSpecies' | 'howToBrew' | 'capacity' | 'size'>
 

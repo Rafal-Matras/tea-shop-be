@@ -77,7 +77,7 @@ export class Product extends BaseEntity {
     nullable: true,
     default: null
   })
-  promo: number;
+  promo: number | null;
 
   @Column({
     type: 'tinyint',
@@ -91,35 +91,35 @@ export class Product extends BaseEntity {
     nullable: true,
     default: null
   })
-  ingredients: string;
+  ingredients: string | null;
 
   @Column({
     length: 60,
     nullable: true,
     default: null
   })
-  countryOrigin: string;
+  countryOrigin: string | null;
 
   @Column({
     length: 60,
     nullable: true,
     default: null
   })
-  amountBrew: string;
+  amountBrew: string | null;
 
   @Column({
     length: 3,
     nullable: true,
     default: null
   })
-  temperatureBrew: string;
+  temperatureBrew: string | null;
 
   @Column({
     length: 7,
     nullable: true,
     default: null
   })
-  timeBrew: string;
+  timeBrew: string | null;
 
   @Column({
     type: 'enum',
@@ -127,44 +127,44 @@ export class Product extends BaseEntity {
     nullable: true,
     default: null
   })
-  numberBrews: NumberBrews;
+  numberBrews: NumberBrews | null;
 
   @Column({
     length: 100,
     nullable: true,
     default: null
   })
-  storageMethod: string;
+  storageMethod: string | null;
 
   @Column({
     length: 20,
     nullable: true,
     default: null
   })
-  coffeeSpecies: string;
+  coffeeSpecies: string | null;
 
   @Column({
     length: 200,
     nullable: true,
     default: null
   })
-  howToBrew: string;
+  howToBrew: string | null;
 
   @Column({
     type: 'smallint',
     nullable: true,
     default: null
   })
-  capacity: number;
+  capacity: number | null;
 
   @Column({
     length: 50,
     nullable: true,
     default: null
   })
-  size: string;
+  size: string | null;
 
-  @OneToMany(type => Basket, entity => entity.product)
-  basket:Basket
+  @OneToMany(() => Basket, entity => entity.product)
+  basket: Basket;
 
 }

@@ -1,67 +1,25 @@
-import { NumberOfUnits, ProductInBasket } from '../../types';
-
-import { User } from '../../user/entities/user.entity';
+import { NumberOfUnits } from '../../types';
+import { Product } from '../../product/entities/product.entity';
 
 export interface BasketInterface {
   id: string;
   count: number;
   packSize: NumberOfUnits;
-  product: ProductInBasket;
-  user: User;
+  product: Product
 }
 
-export type CreateBasketResponse = {
-  isSuccess: true;
-  id: string;
-} | {
-  isSuccess: false;
-  err: string;
-};
+export type CreateBasketResponse = BasketInterface;
 
-export type FindOneBasketResponse = {
-  isSuccess: true;
-  basket: BasketInterface;
-} | {
-  isSuccess: false;
-  err: string;
-};
+export type FindOneBasketResponse = BasketInterface;
 
-export type FindManyBasketResponse = {
-  isSuccess: true;
-  basket: BasketInterface[];
-} | {
-  isSuccess: false;
-  err: string;
-};
+export type FindManyBasketResponse = BasketInterface[];
 
-export type UpdateBasketResponse = {
-  isSuccess: true;
-  basket: BasketInterface;
-} | {
-  isSuccess: false;
-  err: string;
-};
+export type UpdateBasketResponse = BasketInterface;
 
-export type DeleteBasketResponse = {
-  isSuccess: true;
-} | {
-  isSuccess: false;
-  err: string;
-};
+export type DeleteBasketResponse = boolean;
 
-export type DeleteManyBasketResponse = {
-  isSuccess: true;
-} | {
-  isSuccess: false;
-  err: string;
-};
+export type DeleteManyBasketResponse = boolean;
 
-export type BasketFullPriceResponse = {
-  isSuccess: true;
-  price: number;
-} | {
-  isSuccess: false;
-  err: string;
-};
+export type BasketFullPriceResponse = number;
 
 

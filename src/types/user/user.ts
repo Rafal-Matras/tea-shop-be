@@ -1,3 +1,5 @@
+import { Column } from 'typeorm';
+
 export enum Role {
   admin = 'Admin',
   user = 'User',
@@ -35,6 +37,7 @@ export interface UserInterface {
   postCode: string;
   city: string;
   phone: string;
+  otherDeliveryAddress: number;
   delivery:DeliveryUserInterface;
 }
 
@@ -48,10 +51,5 @@ export type FindAllUserResponse = UserResponse[];
 
 export type FindOneUserResponse = UserResponse;
 
-export type RemoveUserResponse = {
-  isSuccess: true
-  id: string
-} | {
-  isSuccess: false
-}
+export type RemoveUserResponse = boolean
 

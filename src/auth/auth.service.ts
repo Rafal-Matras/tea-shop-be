@@ -71,7 +71,7 @@ export class AuthService {
     }
   }
 
-  async logout(user: User, res: Response) {
+  async logout(user: User, res: Response): Promise<any> {
     try {
       user.currentTokenId = null;
       await user.save();

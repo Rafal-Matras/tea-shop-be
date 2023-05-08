@@ -20,11 +20,11 @@ export class Basket extends BaseEntity{
   @Column()
   packSize: NumberOfUnits;
 
-  @ManyToOne(type=>Product , entity => entity.basket)
+  @ManyToOne(()=>Product , entity => entity.basket)
   @JoinColumn()
   product:Product
 
-  @ManyToOne(type => User, entity => entity.basket)
+  @ManyToOne(() => User, entity => entity.baskets)
   @JoinColumn()
   user:User
 

@@ -44,7 +44,7 @@ export class Delivery extends BaseEntity {
   })
   deliveryCity: string;
 
-  @OneToOne(type => User, entity => entity.delivery)
+  @OneToOne(() => User, entity => entity.delivery)
   user:User;
 
 }

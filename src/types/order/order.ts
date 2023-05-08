@@ -29,41 +29,12 @@ export interface OrderFullInterface extends OrderInterface {
   details: Details;
 }
 
-export type CreateOrderResponse = {
-  isSuccess: true,
-  orderNumber: string,
-} | {
-  isSuccess: false,
-  err: string,
-}
+export type CreateOrderResponse = string;
 
-export type GetManyOrderResponse = {
-  isSuccess: true,
-  orders: OrderInterface[],
-} | {
-  isSuccess: false,
-  err: string,
-}
+export type GetManyOrderResponse = OrderInterface[];
 
-export type GetOneOrderResponse = {
-  isSuccess: true,
-  order: OrderFullInterface,
-} | {
-  isSuccess: false,
-  err: string,
-}
+export type GetOneOrderResponse = OrderFullInterface;
 
-export type UpdateOrderResponse = {
-  isSuccess: true,
-  order: OrderInterface,
-} | {
-  isSuccess: false,
-  err: string,
-}
+export type UpdateOrderResponse = OrderInterface;
 
-export type RemoveOrderResponse = {
-  isSuccess: true,
-} | {
-  isSuccess: false,
-  err: string,
-}
+export type RemoveOrderResponse = string

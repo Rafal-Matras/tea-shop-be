@@ -16,7 +16,8 @@ export const filterUserData =(user: User): UserResponse => {
     postCode,
     city,
     phone,
-    delivery
+    delivery,
+    otherDeliveryAddress,
   } = user;
   return {
     id,
@@ -32,6 +33,7 @@ export const filterUserData =(user: User): UserResponse => {
     postCode,
     city,
     phone,
-    delivery
+    delivery,
+    otherDeliveryAddress,
   };
 }

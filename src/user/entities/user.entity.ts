@@ -4,6 +4,7 @@ import { DocumentType, Role } from '../../types/user/user';
 
 import { Delivery } from './delivery.entity';
 import { Basket } from '../../basket/entities/basket.entity';
+import { Order } from '../../order/entities/order.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -38,7 +39,8 @@ export class User extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: DocumentType
+    enum: DocumentType,
+    default:DocumentType.receipt
   })
   documentType: DocumentType;
 
@@ -91,11 +93,21 @@ export class User extends BaseEntity {
   })
   phone: string;
 
-  @OneToOne(type => Delivery, entity => entity.user)
+  @Column({
+    type: 'tinyint',
+    precision: 1,
+    default: 0
+  })
+  otherDeliveryAddress: 1 | 0;
+
+  @OneToOne(() => Delivery, entity => entity.user)
   @JoinColumn()
   delivery: Delivery;
 
-  @OneToMany(type => Basket, entity => entity.user)
+  @OneToMany(() => Basket, entity => entity.user)
   baskets: Basket[];
+
+  @OneToMany(() => Order, entity => entity.user)
+  orders: Order[];
 
 }

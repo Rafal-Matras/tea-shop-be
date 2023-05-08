@@ -175,7 +175,7 @@ export class UserService {
     return filterUserData(user);
   }
 
-  async remove(id: string): Promise<RemoveUserResponse> {
+  async remove(id: string): Promise<boolean> {
 
     const user = await User.findOneOrFail({
       where: {
@@ -183,14 +183,11 @@ export class UserService {
       }
     });
 
-    if (!user) return { isSuccess: false };
+    if (!user) return false;
 
     await user.remove();
 
-    return {
-      isSuccess: true,
-      id
-    };
+    return true
   }
 
 }

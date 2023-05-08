@@ -9,6 +9,7 @@ export class ShopService {
 
   async findAll(): Promise<ProductsList[]> {
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
+
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
@@ -18,6 +19,7 @@ export class ShopService {
   async findAllProductsTypes(category: string, type: string): Promise<ProductsList[]> {
     if (!type) type = '';
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
+
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
@@ -26,9 +28,9 @@ export class ShopService {
       .getMany();
   }
 
-  async findAllProductsForGift():Promise<ProductsList[]> {
+  async findAllProductsForGift(): Promise<ProductsList[]> {
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
-    console.log('gift-------');
+
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
@@ -36,8 +38,9 @@ export class ShopService {
       .getMany();
   }
 
-  async findAllProductsPromo():Promise<ProductsList[]> {
+  async findAllProductsPromo(): Promise<ProductsList[]> {
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
+
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
@@ -47,6 +50,7 @@ export class ShopService {
 
   async findOne(id: string): Promise<OneProduct> {
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.description', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.state', 'product.promo', 'product.ingredients', 'product.countryOrigin', 'product.amountBrew', 'product.temperatureBrew', 'product.timeBrew', 'product.numberBrews', 'product.storageMethod', 'product.coffeeSpecies', 'product.howToBrew', 'product.capacity', 'product.size'];
+
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
