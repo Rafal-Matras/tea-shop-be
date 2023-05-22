@@ -8,9 +8,9 @@ export class Details extends BaseEntity {
   id: string;
 
   @Column({
-    type:'text'
+    type: 'text'
   })
-  orderList:string;
+  orderList: string;
 
   @Column({
     type: 'enum',
@@ -80,14 +80,14 @@ export class Details extends BaseEntity {
     nullable: true,
     default: null
   })
-  deliveryName: string;
+  deliveryName: string | null;
 
   @Column({
     length: 30,
     nullable: true,
     default: null
   })
-  deliverySurName: string;
+  deliverySurName: string | null;
 
   @Column({
     length: 100,
@@ -101,28 +101,28 @@ export class Details extends BaseEntity {
     nullable: true,
     default: null
   })
-  deliveryStreet: string;
+  deliveryStreet: string | null;
 
   @Column({
     length: 15,
     nullable: true,
     default: null
   })
-  deliveryHomeNumber: string;
+  deliveryHomeNumber: string | null;
 
   @Column({
     length: 8,
     nullable: true,
     default: null
   })
-  deliveryPostCode: string;
+  deliveryPostCode: string | null;
 
   @Column({
     length: 30,
     nullable: true,
     default: null
   })
-  deliveryCity: string;
+  deliveryCity: string | null;
 
   @OneToOne(() => Order, entity => entity.details)
   order: Order;

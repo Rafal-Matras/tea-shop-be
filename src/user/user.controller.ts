@@ -1,16 +1,20 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   CreateUserResponse,
   FindAllUserResponse,
-  FindOneUserResponse,
-  RemoveUserResponse,
-  UpdateUserResponse
+  FindOneUserResponse, ForgotPasswordResponse,
+  RemoveUserResponse, UpdatePwdUserResponse,
+  UpdateUserResponse,
 } from '../types';
 
 import { UserService } from './user.service';
+import { UpdatePwdUserDto } from './dto/update-pwd-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { UserObj } from '../common/decorators/userobj.decorator';
+import { User } from './entities/user.entity';
 
 @Controller('/user')
 export class UserController {
@@ -29,6 +33,20 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('/is-in-database/:email')
+  findOneByEmail(
+    @Param('email') email: string
+  ): Promise<FindOneUserResponse> {
+    return this.userService.findOneByEmail(email);
+  }
+
+  @Get('forgot-password/:email')
+  forgetPassword(
+    @Param('email') email: string
+  ):Promise<ForgotPasswordResponse> {
+    return this.userService.forgetPassword(email)
+  }
+
   @Get('/:id')
   findOne(
     @Param('id') id: string
@@ -36,19 +54,21 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @Get('/is-in-database/:email')
-  findOneByEmail(
-    @Param('email') email: string
-  ): Promise<boolean> {
-    return this.userService.findOneByEmail(email);
+  @Put('/change-password/:id')
+  updatePwd(
+    @Param('id') id:string,
+    @Body() newPwd: UpdatePwdUserDto,
+  ): Promise<UpdatePwdUserResponse>{
+    return this.userService.updatePwd(id,newPwd)
   }
 
-  @Put('/:id')
+  @Put('/')
+  @UseGuards(AuthGuard('jwt'))
   update(
-    @Param('id') id: string,
+    @UserObj() user: User,
     @Body() updateUser: UpdateUserDto
   ): Promise<UpdateUserResponse> {
-    return this.userService.update(id, updateUser);
+    return this.userService.update(user.id, updateUser);
   }
 
   @Delete('/:id')

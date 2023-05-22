@@ -1,13 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ProductListResponse } from './types';
+import { ProductListOnHomepageResponse } from './types';
 
 @Controller('/')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHomepageProducts(): Promise<ProductListResponse> {
+  getHomepageProducts(): Promise<ProductListOnHomepageResponse> {
     return this.appService.getHomepageProducts();
   }
 }

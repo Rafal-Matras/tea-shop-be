@@ -1,7 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
+
 import { config } from '../config/config';
+
 import { User } from '../user/entities/user.entity';
 
 
@@ -10,7 +12,7 @@ export interface JwtPayload {
 }
 
 function cookieExtractor(req: any): null | string {
-  return (req && req.cookies) ? (req.cookies?.jwt ?? null) : null;
+  return req && req.cookies ? req.cookies?.access_token ?? null : null;
 }
 
 @Injectable()

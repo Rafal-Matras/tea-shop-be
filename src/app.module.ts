@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { BasketModule } from './basket/basket.module';
 import { OrderModule } from './order/order.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { OrderModule } from './order/order.module';
     AuthModule,
     BasketModule,
     OrderModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService]

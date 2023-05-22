@@ -1,50 +1,153 @@
 import { Injectable } from '@nestjs/common';
 
-import { OneProduct, ProductsList } from '../types';
+import { OneProduct, ProductListResponse, ProductsList, SearchListResponse } from '../types';
 
 import { Product } from 'src/product/entities/product.entity';
 
 @Injectable()
 export class ShopService {
 
-  async findAll(): Promise<ProductsList[]> {
-    const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
 
-    return await Product
+  async findAll(current: number, maxOnPage: number): Promise<ProductListResponse> {
+    const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
+    const count = await Product.count();
+    const products = await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
+      .take(maxOnPage)
+      .skip(current * maxOnPage)
       .getMany();
+
+    const totalPages = Math.ceil(count / maxOnPage);
+
+    return {
+      products,
+      count,
+      totalPages
+    };
   }
 
-  async findAllProductsTypes(category: string, type: string): Promise<ProductsList[]> {
+  async searchProducts(name: string): Promise<SearchListResponse> {
+    const product = ['product.id', 'product.category', 'product.type', 'product.name'];
+    return await Product
+      .createQueryBuilder('product')
+      .select(product)
+      .where('product.name LIKE :name', { name: `%${name}%` })
+      .getMany();
+
+  }
+
+  async findAllProductsTypes(category: string, current: number, maxOnPage: number, type: string): Promise<ProductListResponse> {
     if (!type) type = '';
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
-
-    return await Product
+    const count = await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
       .where('product.category = :category', { category })
       .andWhere('product.type LIKE :type', { type: `%${type}%` })
+      .getCount();
+
+    const totalPages = Math.ceil(count / maxOnPage);
+
+    const products = await Product
+      .createQueryBuilder('product')
+      .select(selectedProducts)
+      .where('product.category = :category', { category })
+      .andWhere('product.type LIKE :type', { type: `%${type}%` })
+      .take(maxOnPage)
+      .skip(current * maxOnPage)
       .getMany();
+
+    return {
+      products,
+      count,
+      totalPages
+    };
   }
 
-  async findAllProductsForGift(): Promise<ProductsList[]> {
+  async findAllProductsForGift(current: number, maxOnPage: number): Promise<ProductListResponse> {
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
-
-    return await Product
+    const count = await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
       .where('product.forGift = 1')
+      .getCount();
+
+    const totalPages = Math.ceil(count / maxOnPage);
+
+    const products = await Product
+      .createQueryBuilder('product')
+      .select(selectedProducts)
+      .where('product.forGift = 1')
+      .take(maxOnPage)
+      .skip(current * maxOnPage)
       .getMany();
+
+    return {
+      products,
+      count,
+      totalPages
+    };
   }
 
-  async findAllProductsPromo(): Promise<ProductsList[]> {
+  async findAllProductsPromo(current: number, maxOnPage: number): Promise<ProductListResponse> {
+    const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
+    const count = await Product
+      .createQueryBuilder('product')
+      .select(selectedProducts)
+      .where('product.promo is not null')
+      .getCount();
+
+    const totalPages = Math.ceil(count / maxOnPage);
+
+    const products = await Product
+      .createQueryBuilder('product')
+      .select(selectedProducts)
+      .where('product.promo is not null')
+      .take(maxOnPage)
+      .skip(current * maxOnPage)
+      .getMany();
+
+    return {
+      products,
+      count,
+      totalPages
+    };
+  }
+
+  async findAllProductsNew(current: number, maxOnPage: number): Promise<ProductListResponse> {
+    const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
+    const count = await Product
+      .createQueryBuilder('product')
+      .select(selectedProducts)
+      .where('product.new = 1')
+      .getCount();
+
+    const totalPages = Math.ceil(count / maxOnPage);
+
+    const products = await Product
+      .createQueryBuilder('product')
+      .select(selectedProducts)
+      .where('product.new = 1')
+      .take(maxOnPage)
+      .skip(current * maxOnPage)
+      .getMany();
+
+    return {
+      products,
+      count,
+      totalPages
+    };
+  }
+
+  async findAllProductsOnHomePage(maxOnPage: number): Promise<ProductsList[]> {
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
 
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
-      .where('product.promo is not null')
+      .where('product.onHomePage = 1')
+      .take(maxOnPage)
       .getMany();
   }
 
@@ -57,5 +160,16 @@ export class ShopService {
       .where('product.id = :id', { id })
       .getOne();
   }
+
+  async getPrice(id: string): Promise<number> {
+    const product = await Product
+      .createQueryBuilder('product')
+      .select(['product.price'])
+      .where('product.id = :id', { id })
+      .getOne();
+
+    return product.price;
+  }
+
 
 }

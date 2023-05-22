@@ -1,20 +1,22 @@
-import { NumberOfUnits } from '../../types';
-import { Product } from '../../product/entities/product.entity';
+export enum PackSize {
+  one = 1,
+  fifth = 5,
+  ten = 10
+}
 
 export interface BasketInterface {
   id: string;
   count: number;
-  packSize: NumberOfUnits;
-  product: Product
+  packSize: PackSize;
 }
 
-export type CreateBasketResponse = BasketInterface;
+export type CreateBasketResponse = { id: string };
 
 export type FindOneBasketResponse = BasketInterface;
 
 export type FindManyBasketResponse = BasketInterface[];
 
-export type UpdateBasketResponse = BasketInterface;
+export type UpdateBasketResponse = boolean;
 
 export type DeleteBasketResponse = boolean;
 

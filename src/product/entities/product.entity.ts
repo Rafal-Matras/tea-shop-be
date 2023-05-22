@@ -108,7 +108,7 @@ export class Product extends BaseEntity {
   amountBrew: string | null;
 
   @Column({
-    length: 3,
+    length: 6,
     nullable: true,
     default: null
   })

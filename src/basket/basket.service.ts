@@ -7,21 +7,23 @@ import { ProductService } from '../product/product.service';
 
 import { Basket } from './entities/basket.entity';
 import { User } from '../user/entities/user.entity';
-import { BasketInterface } from '../types';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class BasketService {
 
   constructor(
-    @Inject(ProductService) private productService: ProductService
+    @Inject(ProductService) private productService: ProductService,
+    @Inject(MailService) private mailService: MailService
   ) {
   }
 
-  async create(createBasket: CreateBasketDto, user: User): Promise<Basket> {
+  async create(createBasket: CreateBasketDto, user: User): Promise<{ id: string }> {
     const { count, packSize, productId } = createBasket;
     const product = await this.productService.findOne(productId);
 
     const basket = new Basket();
+
     basket.count = count;
     basket.packSize = packSize;
 
@@ -32,10 +34,10 @@ export class BasketService {
 
     await basket.save();
 
-    return basket;
+    return { id: basket.id };
   }
 
-  async findMany(id: string): Promise<BasketInterface[]> {
+  async findMany(id: string): Promise<Basket[]> {
     return await Basket
       .createQueryBuilder('basket')
       .leftJoinAndSelect('basket.product', 'product')
@@ -44,7 +46,7 @@ export class BasketService {
 
   }
 
-  async findOne(id: string): Promise<BasketInterface> {
+  async findOne(id: string): Promise<Basket> {
     return await Basket.findOne({
       relations: ['product'],
       where: {
@@ -54,8 +56,8 @@ export class BasketService {
 
   }
 
-  async update(id: string, updateBasket: UpdateBasketDto): Promise<BasketInterface> {
-    const { count, packSize } = updateBasket;
+  async update(updateBasket: UpdateBasketDto): Promise<boolean> {
+    const { id, count, packSize } = updateBasket;
 
     const basket = await Basket.findOne({
       where: {
@@ -68,7 +70,7 @@ export class BasketService {
 
     await basket.save();
 
-    return basket;
+    return true;
   }
 
   async removeMany(id: string): Promise<boolean> {
@@ -97,11 +99,10 @@ export class BasketService {
     const items = await this.findMany(id);
 
     const price = (await Promise.all(items
-      .map(async item => item.product.price * item.count * item.packSize)))
-      .reduce((prev, curr) => prev + curr, 0)
-      .toFixed(2);
+      .map(async item => (item.product.price * 100 * item.count * item.packSize) / 100)))
+      .reduce((prev, curr) => prev + curr, 0);
 
-    return +price
+    return price;
   }
 
 }

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import { DeliveryUserInterface, RemoveUserResponse, UserResponse } from '../types';
+import { DeliveryUserInterface, FindOneUserResponse, UserResponse } from '../types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -9,9 +9,17 @@ import { Delivery } from './entities/delivery.entity';
 
 import { hashPwd } from 'src/utils/hashPwd';
 import { filterUserData } from '../utils/filterUserData';
+import { MailService } from '../mail/mail.service';
+import { config } from '../config/config';
+import { UpdatePwdUserDto } from './dto/update-pwd-user.dto';
 
 @Injectable()
 export class UserService {
+
+  constructor(
+    @Inject(MailService) private mailService: MailService
+  ) {
+  }
 
   async createDetails(user: User, deliveryDto: DeliveryUserInterface) {
     const {
@@ -41,7 +49,7 @@ export class UserService {
     }
   }
 
-  async create(createUser: CreateUserDto): Promise<UserResponse | boolean> {
+  async create(createUser: CreateUserDto): Promise<{ ok: boolean }> {
     const {
       email,
       pwdHash,
@@ -54,11 +62,12 @@ export class UserService {
       homeNumber,
       postCode,
       city,
-      phone
+      phone,
+      otherDeliveryAddress,
     } = createUser.userDto;
 
-    if (await this.findOneByEmail(email)) {
-      return false;
+    if (!await this.findOneByEmail(email)) {
+      return { ok: false };
     }
 
     const user = new User();
@@ -74,12 +83,12 @@ export class UserService {
     user.postCode = postCode;
     user.city = city;
     user.phone = phone;
+    user.otherDeliveryAddress = otherDeliveryAddress;
 
     await user.save();
-
     await this.createDetails(user, createUser.deliveryDto);
 
-    return filterUserData(user);
+    return { ok: true };
   }
 
   async findAll(): Promise<UserResponse[]> {
@@ -90,25 +99,72 @@ export class UserService {
     return users.map(user => filterUserData(user));
   }
 
-  async findOne(id: string): Promise<UserResponse> {
-    const user = await User.findOne({
+  async findOne(id: string): Promise<FindOneUserResponse> {
+    const user = await User.findOneOrFail({
       relations: ['delivery'],
       where: {
         id
       }
     });
-    return filterUserData(user);
+
+    if (!user) return { ok: false };
+
+    return {
+      ok: true,
+      user: filterUserData(user)
+    };
   }
 
-  async findOneByEmail(email: string): Promise<boolean> {
+  async findOneByEmail(email: string): Promise<FindOneUserResponse> {
     const user = await User.findOne({
       where: {
         email
       }
     });
 
-    return !!user;
+    if (!user) return { ok: false };
+
+    return {
+      ok: true,
+      user: filterUserData(user)
+    };
   }
+
+  async forgetPassword(email: string): Promise<{ ok: boolean }> {
+    const user = await User.findOne({
+      where: {
+        email
+      }
+    });
+
+    if (!user) throw new NotFoundException();
+
+    user.forgotPwdExpiredAt = new Date(new Date().getTime() + 1000 * 60 * 10);
+    await user.save();
+
+    await this.mailService.forgotPassword(user.email, {
+      user: user.name,
+      forgotPasswordUrl: `${config.feUrl}/forgot-password/${user.id}`
+    });
+
+
+    return { ok: true };
+
+  }
+
+  // async updatePwd(newPwd: UpdatePwdUserDto) {
+  //   const { userToken, pwd } = newPwd;
+  //   const user = await User.findOne({
+  //     where: {
+  //       userToken
+  //     }
+  //   });
+  //
+  //   if (!user) throw new NotFoundException();
+  //   if(user.userTokenExpiredAt < new Date()) throw new RequestTimeoutException()
+  //
+  //
+  // }
 
   async update(id: string, updateUser: UpdateUserDto): Promise<UserResponse> {
     const {
@@ -175,7 +231,7 @@ export class UserService {
     return filterUserData(user);
   }
 
-  async remove(id: string): Promise<boolean> {
+  async remove(id: string): Promise<{ ok: boolean }> {
 
     const user = await User.findOneOrFail({
       where: {
@@ -183,11 +239,25 @@ export class UserService {
       }
     });
 
-    if (!user) return false;
+    if (!user) return { ok: false };
 
     await user.remove();
 
-    return true
+    return { ok: true };
   }
 
+  async updatePwd(id: string, newPwd: UpdatePwdUserDto): Promise<{ ok: boolean }> {
+    const user = await User.findOne({
+      where: {
+        id
+      }
+    });
+    if (!user) return { ok: false };
+
+    user.pwdHash = await hashPwd(newPwd.pwd);
+
+    await user.save();
+
+    return { ok: true };
+  }
 }

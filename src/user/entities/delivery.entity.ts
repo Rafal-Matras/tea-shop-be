@@ -19,10 +19,8 @@ export class Delivery extends BaseEntity {
 
   @Column({
     length: 100,
-    nullable: true,
-    default: null
   })
-  deliveryCompanyName: string | null;
+  deliveryCompanyName: string;
 
   @Column({
     length: 40

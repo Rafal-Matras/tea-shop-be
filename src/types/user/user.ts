@@ -1,8 +1,6 @@
-import { Column } from 'typeorm';
-
 export enum Role {
-  admin = 'Admin',
-  user = 'User',
+  admin = 'admin',
+  user = 'user',
 }
 
 export enum DocumentType {
@@ -26,7 +24,8 @@ export interface UserInterface {
   role: Role;
   email: string;
   pwdHash: string;
-  currentTokenId:string | null,
+  forgotPwdExpiredAt: Date | null;
+  currentTokenId: string | null,
   documentType: DocumentType;
   name: string;
   surName: string;
@@ -37,19 +36,26 @@ export interface UserInterface {
   postCode: string;
   city: string;
   phone: string;
-  otherDeliveryAddress: number;
-  delivery:DeliveryUserInterface;
+  otherDeliveryAddress: 0 | 1;
+  delivery: DeliveryUserInterface;
 }
 
 export type UserResponse = Omit<UserInterface, 'pwdHash' | 'currentTokenId'>
 
-export type CreateUserResponse = UserResponse | boolean;
+export type CreateUserResponse = { ok: boolean };
 
 export type UpdateUserResponse = UserResponse;
 
+export type UpdatePwdUserResponse = { ok: boolean };
+
 export type FindAllUserResponse = UserResponse[];
 
-export type FindOneUserResponse = UserResponse;
-
-export type RemoveUserResponse = boolean
+export type FindOneUserResponse = {
+  ok: true,
+  user: UserResponse,
+} | {
+  ok: false
+};
+export type RemoveUserResponse = { ok: boolean };
+export type ForgotPasswordResponse = { ok: boolean };
 

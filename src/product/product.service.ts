@@ -4,12 +4,11 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import { Product } from './entities/product.entity';
-import {ProductInterface, } from '../types';
 
 @Injectable()
 export class ProductService {
 
-  async create(newProduct: CreateProductDto): Promise<ProductInterface> {
+  async create(newProduct: CreateProductDto): Promise<Product> {
     const {
       name,
       category,
@@ -68,12 +67,12 @@ export class ProductService {
 
   }
 
-  async findAll(): Promise<ProductInterface[]> {
+  async findAll(): Promise<Product[]> {
     return await Product.find();
 
   }
 
-  async findOne(id: string): Promise<ProductInterface> {
+  async findOne(id: string): Promise<Product> {
     return await Product.findOne({
       where: {
         id
@@ -82,7 +81,7 @@ export class ProductService {
 
   }
 
-  async update(id: string, updateProduct: UpdateProductDto): Promise<ProductInterface> {
+  async update(id: string, updateProduct: UpdateProductDto): Promise<Product> {
     const {
       name,
       category,
@@ -154,6 +153,6 @@ export class ProductService {
 
     await product.remove();
 
-    return id
+    return id;
   }
 }

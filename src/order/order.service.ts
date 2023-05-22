@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { OrderFullInterface, OrderInterface } from '../types';
+import { OrderFullInterface } from '../types';
 
 import { Order } from './entities/order.entity';
 import { User } from '../user/entities/user.entity';
@@ -88,7 +88,7 @@ export class OrderService {
     return order.orderNumber;
   }
 
-  async findAll(id: string): Promise<OrderInterface[]> {
+  async findAll(id: string): Promise<Order[]> {
     return  await Order
       .createQueryBuilder('order')
       .where('order.userId = :id', { id })
@@ -105,7 +105,7 @@ export class OrderService {
     });
   }
 
-  async update(id: string, updateOrder: UpdateOrderDto): Promise<OrderInterface> {
+  async update(id: string, updateOrder: UpdateOrderDto): Promise<Order> {
     const { status, trackingNumber } = updateOrder;
     const order = await Order.findOne({
       where: {

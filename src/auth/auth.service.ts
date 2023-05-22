@@ -19,8 +19,8 @@ export class AuthService {
   private createToken(currentTokenId: string): { accessToken: string, expiresIn: number } {
     const payload: JwtPayload = { id: currentTokenId };
     const expiresIn = 60 * 60 * 2;
-
     const accessToken = sign(payload, config.secretJwt, { expiresIn });
+
     return {
       accessToken,
       expiresIn
@@ -43,31 +43,35 @@ export class AuthService {
   async login(req: AuthLoginDto, res: Response): Promise<any> {
     try {
       const user = await User.findOne({
-        relations:['delivery'],
+        relations: ['delivery'],
         where: {
           email: req.email
         }
       });
-      if (!user || !await comparePwd(req.pwd, user.pwdHash)) {
+
+      if (!user || !await comparePwd(req.pwdHash, user.pwdHash)) {
         return res.json({
           login: false,
-          message:'Invalid login data',
+          message: 'Invalid login data'
         });
       }
       const token = this.createToken(await this.generateToken(user));
 
       return res
-        .cookie('jwt', token.accessToken, {
+        .cookie('access_token', token.accessToken, {
           secure: false,
           domain: 'localhost',
-          httpOnly: true
+          httpOnly: true,
         })
         .json({
           login: true,
           user: filterUserData(user)
         });
     } catch (err) {
-      return res.json({ login: err.message });
+      return res.json({
+        login: false,
+        message: err.message
+      });
     }
   }
 
@@ -75,17 +79,15 @@ export class AuthService {
     try {
       user.currentTokenId = null;
       await user.save();
-      res.clearCookie(
-        'jwt',
-        {
+      res.clearCookie('access_token', {
           secure: false,
           domain: 'localhost',
-          httpOnly: true,
-        },
+          httpOnly: true
+        }
       );
-      return res.json({logOut: true});
+      return res.json({ logout: true });
     } catch (err) {
-      return res.json({logout:false,message: err.message});
+      return res.json({ logout: false, message: err.message });
     }
   }
 }

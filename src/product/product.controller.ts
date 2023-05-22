@@ -39,7 +39,7 @@ export class ProductController {
   @Patch('/:id')
   update(
     @Param('id') id: string,
-    @Body() updateProductDto: UpdateProductDto,
+    @Body() updateProductDto: UpdateProductDto
   ): Promise<UpdateProductResponse> {
     return this.productService.update(id, updateProductDto);
   }

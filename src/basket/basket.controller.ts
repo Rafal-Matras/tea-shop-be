@@ -31,7 +31,8 @@ export class BasketController {
     return this.basketService.create(createBasket, user);
   }
 
-  @Get('/all')
+
+  @Get('/')
   @UseGuards(AuthGuard('jwt'))
   findMany(
     @UserObj() user: User
@@ -39,15 +40,7 @@ export class BasketController {
     return this.basketService.findMany(user.id);
   }
 
-  @Get('/one/:id')
-  @UseGuards(AuthGuard('jwt'))
-  findOne(
-    @Param('id') id: string
-  ): Promise<FindOneBasketResponse> {
-    return this.basketService.findOne(id);
-  }
-
-  @Get('full-price')
+  @Get('/full-price')
   @UseGuards(AuthGuard('jwt'))
   basketFullPrice(
     @UserObj() user: User
@@ -55,13 +48,20 @@ export class BasketController {
     return this.basketService.basketFullPrice(user.id);
   }
 
+  @Get('/:id')
+  @UseGuards(AuthGuard('jwt'))
+  findOne(
+    @Param('id') id: string
+  ): Promise<FindOneBasketResponse> {
+    return this.basketService.findOne(id);
+  }
+
   @Put('/')
   @UseGuards(AuthGuard('jwt'))
   update(
-    @UserObj() user: User,
     @Body() updateBasket: UpdateBasketDto
   ): Promise<UpdateBasketResponse> {
-    return this.basketService.update(user.id, updateBasket);
+    return this.basketService.update(updateBasket);
   }
 
   @Delete('/all')
@@ -75,7 +75,7 @@ export class BasketController {
   @Delete('/:id')
   @UseGuards(AuthGuard('jwt'))
   remove(
-    @Param('/id') id: string
+    @Param('id') id: string
   ): Promise<DeleteBasketResponse> {
     return this.basketService.remove(id);
   }

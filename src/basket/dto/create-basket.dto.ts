@@ -1,8 +1,7 @@
-import { NumberOfUnits } from '../../types';
+import { PackSize } from '../../types';
 
 export class CreateBasketDto {
-  id: string;
   count: number;
-  packSize: NumberOfUnits;
+  packSize: PackSize;
   productId:string;
 }

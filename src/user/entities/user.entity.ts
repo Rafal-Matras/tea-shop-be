@@ -31,6 +31,13 @@ export class User extends BaseEntity {
   pwdHash: string;
 
   @Column({
+    type: 'datetime',
+    nullable: true,
+    default: null,
+  })
+  forgotPwdExpiredAt: Date;
+
+  @Column({
     length: 36,
     nullable: true,
     default: null
@@ -56,17 +63,13 @@ export class User extends BaseEntity {
 
   @Column({
     length: 100,
-    nullable: true,
-    default: null
   })
-  companyName: string | null;
+  companyName: string ;
 
   @Column({
     length: 13,
-    nullable: true,
-    default: null
   })
-  nip: string | null;
+  nip: string ;
 
   @Column({
     length: 40

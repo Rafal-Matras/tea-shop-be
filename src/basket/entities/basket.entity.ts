@@ -1,31 +1,35 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { NumberOfUnits } from '../../types';
+import { PackSize } from '../../types';
 
 import { Product } from '../../product/entities/product.entity';
 import { User } from '../../user/entities/user.entity';
 
 @Entity()
-export class Basket extends BaseEntity{
+export class Basket extends BaseEntity {
 
   @PrimaryGeneratedColumn('uuid')
-  id:string;
+  id: string;
 
   @Column({
-    type:'smallint',
-    precision:3,
+    type: 'smallint',
+    precision: 2
   })
-  count:number;
+  count: number;
 
-  @Column()
-  packSize: NumberOfUnits;
+  @Column({
+    type: 'enum',
+    enum: PackSize,
+    default: 1
+  })
+  packSize: PackSize;
 
-  @ManyToOne(()=>Product , entity => entity.basket)
+  @ManyToOne(() => Product, entity => entity.basket)
   @JoinColumn()
-  product:Product
+  product: Product;
 
   @ManyToOne(() => User, entity => entity.baskets)
   @JoinColumn()
-  user:User
+  user: User;
 
 }

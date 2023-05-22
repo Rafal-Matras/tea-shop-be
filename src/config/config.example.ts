@@ -1,8 +1,16 @@
 export const config = {
   dbHost: 'localhost',
   dbPort: 3306,
-  dbDatabase: 'my-shop',
+  dbDatabase: 'tea-shop',
   dbUsername: 'root',
   dbPassword: '',
+  dbLogging: false,
+  dbSynchronize:false,
+  mailEmail:'info@herbacianyzakatek.pl',
+  mailUserName:'test',
+  mailPassword:'test',
+  mailHost:'localhost',
+  mailPort:2500,
+  feUrl:'http://localhost:5173',
   secretJwt:' segv,wt8hmw90y8tm8fm3yqg7tyvnf3yf3,f8c4yhw7t7v8ycm4*^JT^&%^D46d6bd6DDV4e6rRBtn6gRBDv35sd46BF*nf7ff&B wyt',
 };
