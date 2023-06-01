@@ -1,21 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { OrderFullInterface } from '../types';
+import { CreateOrderResponse, OrderFullInterface } from '../types';
 
 import { Order } from './entities/order.entity';
 import { User } from '../user/entities/user.entity';
 import { Details } from './entities/details.entity';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class OrderService {
 
-  async create(createOrder: CreateOrderDto): Promise<string> {
+  constructor(
+    @Inject(MailService) private mailService: MailService
+  ) {
+  }
+
+  async create(createOrder: CreateOrderDto): Promise<CreateOrderResponse> {
     const {
       price,
       formOfDelivery,
       userId,
+      email,
       orderList,
       documentType,
       name,
@@ -23,7 +30,7 @@ export class OrderService {
       companyName,
       nip,
       street,
-      homeNumber,
+      flatNumber,
       postCode,
       city,
       phone,
@@ -32,7 +39,7 @@ export class OrderService {
       deliverySurName,
       deliveryCompanyName,
       deliveryStreet,
-      deliveryHomeNumber,
+      deliveryFlatNumber,
       deliveryPostCode,
       deliveryCity
     } = createOrder;
@@ -52,15 +59,28 @@ export class OrderService {
 
     await order.save();
 
+    if (userId) {
+      const user = await User.findOne({
+        where: {
+          id: userId
+        }
+      });
+      if (!user) return { ok: false };
+
+      order.user = user;
+      await order.save();
+    }
+
     const details = new Details();
     details.orderList = orderList;
     details.documentType = documentType;
+    details.email = email;
     details.name = name;
     details.surName = surName;
     details.companyName = companyName;
     details.nip = nip;
     details.street = street;
-    details.homeNumber = homeNumber;
+    details.flatNumber = flatNumber;
     details.postCode = postCode;
     details.city = city;
     details.phone = phone;
@@ -69,27 +89,27 @@ export class OrderService {
     details.deliverySurName = deliverySurName;
     details.deliveryCompanyName = deliveryCompanyName;
     details.deliveryStreet = deliveryStreet;
-    details.deliveryHomeNumber = deliveryHomeNumber;
+    details.deliveryFlatNumber = deliveryFlatNumber;
     details.deliveryPostCode = deliveryPostCode;
     details.deliveryCity = deliveryCity;
 
     await details.save();
 
-    const user = await User.findOne({
-      where: {
-        id: userId
-      }
-    });
-
     order.details = details;
-    order.user = user;
     await order.save();
 
-    return order.orderNumber;
+    await this.mailService.buyItems(email, {
+      user: name
+    });
+
+    return {
+      ok: true,
+      orderNumber: orderNumber
+    };
   }
 
   async findAll(id: string): Promise<Order[]> {
-    return  await Order
+    return await Order
       .createQueryBuilder('order')
       .where('order.userId = :id', { id })
       .getMany();
@@ -97,7 +117,7 @@ export class OrderService {
   }
 
   async findOne(id: string): Promise<OrderFullInterface> {
-    return  await Order.findOne({
+    return await Order.findOne({
       relations: ['details'],
       where: {
         id

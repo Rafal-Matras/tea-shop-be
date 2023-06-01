@@ -142,7 +142,7 @@ export class ShopService {
 
   async findAllProductsOnHomePage(maxOnPage: number): Promise<ProductsList[]> {
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
-
+  
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)

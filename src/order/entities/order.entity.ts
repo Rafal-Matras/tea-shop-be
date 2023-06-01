@@ -15,7 +15,8 @@ export class Order extends BaseEntity {
   orderNumber: string;
 
   @Column({
-    default: () => 'CURRENT_TIMESTAMP'
+    type:'date',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createdAd: Date;
 

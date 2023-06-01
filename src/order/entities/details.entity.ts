@@ -20,6 +20,11 @@ export class Details extends BaseEntity {
   documentType: DocumentType;
 
   @Column({
+    length: 255,
+  })
+  email: string;
+
+  @Column({
     length: 20
   })
   name: string;
@@ -51,7 +56,7 @@ export class Details extends BaseEntity {
   @Column({
     length: 15
   })
-  homeNumber: string;
+  flatNumber: string;
 
   @Column({
     length: 8
@@ -108,7 +113,7 @@ export class Details extends BaseEntity {
     nullable: true,
     default: null
   })
-  deliveryHomeNumber: string | null;
+  deliveryFlatNumber: string | null;
 
   @Column({
     length: 8,
