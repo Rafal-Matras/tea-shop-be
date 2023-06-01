@@ -8,11 +8,11 @@ export enum Status {
 }
 
 export enum Delivery {
-  paczkomat = 'paczkomat InPost',
-  inpost = 'kurier InPost',
+  paczkomat = 'paczkomat Inpost',
+  inpost = 'kurier Inpost',
   gls = 'kurier GLS',
   dhl = 'kurier DHL',
-  zabka = 'odbiór w Żabce',
+  zabka = 'odbiór w żabce',
 }
 
 export interface OrderInterface {
@@ -29,7 +29,12 @@ export interface OrderFullInterface extends OrderInterface {
   details: Details;
 }
 
-export type CreateOrderResponse = string;
+export type CreateOrderResponse = {
+  ok: true,
+  orderNumber: string
+} | {
+  ok: false
+};
 
 export type GetManyOrderResponse = OrderInterface[];
 

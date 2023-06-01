@@ -21,31 +21,42 @@ export class UserService {
   ) {
   }
 
-  async createDetails(user: User, deliveryDto: DeliveryUserInterface) {
+  async editDetails(user: User, deliveryDto: DeliveryUserInterface) {
+    console.log('tu details');
     const {
       deliveryName,
       deliverySurName,
       deliveryCompanyName,
       deliveryStreet,
-      deliveryHomeNumber,
+      deliveryFlatNumber,
       deliveryPostCode,
       deliveryCity
     } = deliveryDto;
 
-    if (deliveryName && deliverySurName && deliveryStreet && deliveryHomeNumber && deliveryPostCode && deliveryCity) {
-      const delivery = new Delivery();
+    const saveNewDelivery = async (delivery: Delivery) => {
       delivery.deliveryName = deliveryName;
       delivery.deliverySurName = deliverySurName;
       delivery.deliveryCompanyName = deliveryCompanyName;
       delivery.deliveryStreet = deliveryStreet;
-      delivery.deliveryHomeNumber = deliveryHomeNumber;
+      delivery.deliveryFlatNumber = deliveryFlatNumber;
       delivery.deliveryPostCode = deliveryPostCode;
       delivery.deliveryCity = deliveryCity;
 
       await delivery.save();
-
       user.delivery = delivery;
+
       await user.save();
+
+    };
+
+    if (!deliveryName && !deliverySurName && !deliveryStreet && !deliveryFlatNumber && !deliveryPostCode && !deliveryCity) {
+      const delivery = new Delivery();
+      user.otherDeliveryAddress = 1;
+      await user.save();
+      await saveNewDelivery(delivery);
+    } else {
+      const delivery = user.delivery;
+      await saveNewDelivery(delivery);
     }
   }
 
@@ -59,11 +70,11 @@ export class UserService {
       companyName,
       nip,
       street,
-      homeNumber,
+      flatNumber,
       postCode,
       city,
       phone,
-      otherDeliveryAddress,
+      otherDeliveryAddress
     } = createUser.userDto;
 
     if (!await this.findOneByEmail(email)) {
@@ -79,14 +90,14 @@ export class UserService {
     user.companyName = companyName;
     user.nip = nip;
     user.street = street;
-    user.homeNumber = homeNumber;
+    user.flatNumber = flatNumber;
     user.postCode = postCode;
     user.city = city;
     user.phone = phone;
     user.otherDeliveryAddress = otherDeliveryAddress;
 
     await user.save();
-    await this.createDetails(user, createUser.deliveryDto);
+    await this.editDetails(user, createUser.deliveryDto);
 
     return { ok: true };
   }
@@ -136,7 +147,6 @@ export class UserService {
         email
       }
     });
-
     if (!user) throw new NotFoundException();
 
     user.forgotPwdExpiredAt = new Date(new Date().getTime() + 1000 * 60 * 10);
@@ -147,24 +157,8 @@ export class UserService {
       forgotPasswordUrl: `${config.feUrl}/forgot-password/${user.id}`
     });
 
-
     return { ok: true };
-
   }
-
-  // async updatePwd(newPwd: UpdatePwdUserDto) {
-  //   const { userToken, pwd } = newPwd;
-  //   const user = await User.findOne({
-  //     where: {
-  //       userToken
-  //     }
-  //   });
-  //
-  //   if (!user) throw new NotFoundException();
-  //   if(user.userTokenExpiredAt < new Date()) throw new RequestTimeoutException()
-  //
-  //
-  // }
 
   async update(id: string, updateUser: UpdateUserDto): Promise<UserResponse> {
     const {
@@ -176,57 +170,45 @@ export class UserService {
       companyName,
       nip,
       street,
-      homeNumber,
+      flatNumber,
       postCode,
       city,
       phone
     } = updateUser.userDto;
-    const {
-      deliveryName,
-      deliverySurName,
-      deliveryCompanyName,
-      deliveryStreet,
-      deliveryHomeNumber,
-      deliveryPostCode,
-      deliveryCity
-    } = updateUser.deliveryDto;
 
-    const user = await User.findOneOrFail({
+    const user = await User.findOne({
       relations: ['delivery'],
       where: {
         id
       }
     });
+
+    if (user.email !== email) {
+      const a = await this.findOneByEmail(email);
+      if(a.ok){
+      console.log('email-is');
+        return
+      }
+      user.email = email ?? user.email;
+    }
+
     user.role = role ?? user.role;
-    user.email = email ?? user.email;
     user.documentType = documentType ?? user.documentType;
     user.name = name ?? user.name;
     user.surName = surName ?? user.surName;
     user.companyName = companyName ?? user.companyName;
     user.nip = nip ?? user.nip;
     user.street = street ?? user.street;
-    user.homeNumber = homeNumber ?? user.homeNumber;
+    user.flatNumber = flatNumber ?? user.flatNumber;
     user.postCode = postCode ?? user.postCode;
     user.city = city ?? user.city;
     user.phone = phone ?? user.phone;
 
     await user.save();
 
-    if (user.delivery) {
-      const delivery = user.delivery;
-      delivery.deliveryName = deliveryName ?? delivery.deliveryName;
-      delivery.deliverySurName = deliverySurName ?? delivery.deliverySurName;
-      delivery.deliveryCompanyName = deliveryCompanyName ?? delivery.deliveryCompanyName;
-      delivery.deliveryStreet = deliveryStreet ?? delivery.deliveryStreet;
-      delivery.deliveryHomeNumber = deliveryHomeNumber ?? delivery.deliveryHomeNumber;
-      delivery.deliveryPostCode = deliveryPostCode ?? delivery.deliveryPostCode;
-      delivery.deliveryCity = deliveryCity ?? delivery.deliveryCity;
+    if (updateUser.deliveryDto.deliveryName !== '') await this.editDetails(user, updateUser.deliveryDto);
 
-      await delivery.save();
-
-      user.delivery = delivery;
-      await user.save();
-    } else await this.createDetails(user, updateUser.deliveryDto);
+    console.log('tu---');
 
     return filterUserData(user);
   }

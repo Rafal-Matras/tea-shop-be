@@ -30,7 +30,7 @@ export class Delivery extends BaseEntity {
   @Column({
     length: 15
   })
-  deliveryHomeNumber: string;
+  deliveryFlatNumber: string;
 
   @Column({
     length: 8

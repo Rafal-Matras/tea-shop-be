@@ -14,7 +14,7 @@ export interface DeliveryUserInterface {
   deliverySurName: string;
   deliveryCompanyName: string;
   deliveryStreet: string;
-  deliveryHomeNumber: string;
+  deliveryFlatNumber: string;
   deliveryPostCode: string;
   deliveryCity: string;
 }
@@ -32,7 +32,7 @@ export interface UserInterface {
   companyName: string | null;
   nip: string | null;
   street: string;
-  homeNumber: string;
+  flatNumber: string;
   postCode: string;
   city: string;
   phone: string;

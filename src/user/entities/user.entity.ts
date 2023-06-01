@@ -35,7 +35,7 @@ export class User extends BaseEntity {
     nullable: true,
     default: null,
   })
-  forgotPwdExpiredAt: Date;
+  forgotPwdExpiredAt: Date | null;
 
   @Column({
     length: 36,
@@ -79,7 +79,7 @@ export class User extends BaseEntity {
   @Column({
     length: 15
   })
-  homeNumber: string;
+  flatNumber: string;
 
   @Column({
     length: 8

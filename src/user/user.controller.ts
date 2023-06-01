@@ -40,7 +40,7 @@ export class UserController {
     return this.userService.findOneByEmail(email);
   }
 
-  @Get('forgot-password/:email')
+  @Get('/forgot-password/:email')
   forgetPassword(
     @Param('email') email: string
   ):Promise<ForgotPasswordResponse> {

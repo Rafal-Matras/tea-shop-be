@@ -3,15 +3,16 @@ import { Delivery, DocumentType } from '../../types';
 export class CreateOrderDto {
   price: number;
   formOfDelivery: Delivery;
-  userId:string | null;
   orderList: string;
+  userId:string | null;
+  email:string;
   documentType: DocumentType;
   name: string;
   surName: string;
   companyName: string | null;
   nip: string | null;
   street: string;
-  homeNumber: string;
+  flatNumber: string;
   postCode: string;
   city: string;
   phone: string;
@@ -20,8 +21,7 @@ export class CreateOrderDto {
   deliverySurName: string | null;
   deliveryCompanyName: string | null;
   deliveryStreet: string | null;
-  deliveryHomeNumber: string | null;
+  deliveryFlatNumber: string | null;
   deliveryPostCode: string | null;
   deliveryCity: string | null;
-
 }
