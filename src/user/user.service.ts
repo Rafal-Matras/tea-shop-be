@@ -97,7 +97,9 @@ export class UserService {
     user.otherDeliveryAddress = otherDeliveryAddress;
 
     await user.save();
-    await this.editDetails(user, createUser.deliveryDto);
+    if (user.otherDeliveryAddress) {
+      await this.editDetails(user, createUser.deliveryDto);
+    }
 
     return { ok: true };
   }
@@ -185,9 +187,9 @@ export class UserService {
 
     if (user.email !== email) {
       const a = await this.findOneByEmail(email);
-      if(a.ok){
-      console.log('email-is');
-        return
+      if (a.ok) {
+        console.log('email-is');
+        return;
       }
       user.email = email ?? user.email;
     }
