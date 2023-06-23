@@ -156,7 +156,7 @@ export class UserService {
 
     await this.mailService.forgotPassword(user.email, {
       user: user.name,
-      forgotPasswordUrl: `${config.feUrl}/forgot-password/${user.id}`
+      forgotPasswordUrl: `${config.feUrl}/user/forgot-password/${encodeURIComponent(user.id)}`
     });
 
     return { ok: true };

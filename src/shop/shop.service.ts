@@ -95,7 +95,7 @@ export class ShopService {
     const count = await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
-      .where('product.promo is not null')
+      .where('product.promo > 0')
       .getCount();
 
     const totalPages = Math.ceil(count / maxOnPage);
@@ -103,7 +103,7 @@ export class ShopService {
     const products = await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
-      .where('product.promo is not null')
+      .where('product.promo > 0')
       .take(maxOnPage)
       .skip(current * maxOnPage)
       .getMany();
@@ -142,7 +142,7 @@ export class ShopService {
 
   async findAllProductsOnHomePage(maxOnPage: number): Promise<ProductsList[]> {
     const selectedProducts = ['product.id', 'product.category', 'product.type', 'product.name', 'product.price', 'product.image', 'product.unit', 'product.numberOfUnits', 'product.new', 'product.promo'];
-  
+
     return await Product
       .createQueryBuilder('product')
       .select(selectedProducts)
