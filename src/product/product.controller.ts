@@ -14,7 +14,7 @@ import {
 import { ProductService } from './product.service';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('/admin/product')
+@Controller('/api/admin/product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {
   }

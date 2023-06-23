@@ -10,7 +10,7 @@ import {
 
 import { ShopService } from './shop.service';
 
-@Controller('/shop')
+@Controller('/api/shop')
 export class ShopController {
   constructor(private readonly shopService: ShopService) {
   }

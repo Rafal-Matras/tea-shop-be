@@ -16,7 +16,7 @@ import { BasketService } from './basket.service';
 import { UserObj } from '../common/decorators/userobj.decorator';
 import { User } from '../user/entities/user.entity';
 
-@Controller('/basket')
+@Controller('/api/basket')
 export class BasketController {
   constructor(
     @Inject(BasketService) private basketService: BasketService) {

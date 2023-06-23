@@ -18,7 +18,7 @@ import { UseRole } from '../common/decorators/userole.decorator';
 import { OrderService } from './order.service';
 import { User } from '../user/entities/user.entity';
 
-@Controller('/order')
+@Controller('/api/order')
 export class OrderController {
   constructor(
     @Inject(OrderService) private orderService: OrderService

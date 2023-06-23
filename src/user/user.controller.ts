@@ -16,7 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserObj } from '../common/decorators/userobj.decorator';
 import { User } from './entities/user.entity';
 
-@Controller('/user')
+@Controller('/api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {
   }

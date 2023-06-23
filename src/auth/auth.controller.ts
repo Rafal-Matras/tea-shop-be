@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 import { UserObj } from '../common/decorators/userobj.decorator';
 import { User } from '../user/entities/user.entity';
 
-@Controller('/auth')
+@Controller('/api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {
   }
