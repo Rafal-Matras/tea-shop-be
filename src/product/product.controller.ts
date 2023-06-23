@@ -1,16 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import {
   CreateProductResponse,
   FindAllProductResponse,
+  FindByProductNameResponse,
   FindOneProductResponse,
   RemoveProductResponse,
   UpdateProductResponse
 } from '../types';
 
 import { ProductService } from './product.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/admin/product')
 export class ProductController {
@@ -18,6 +20,7 @@ export class ProductController {
   }
 
   @Post('/')
+  @UseGuards(AuthGuard('jwt'))
   create(
     @Body() newProduct: CreateProductDto
   ): Promise<CreateProductResponse> {
@@ -29,12 +32,20 @@ export class ProductController {
     return this.productService.findAll();
   }
 
+  @Get('/name/:name')
+  findByName(
+    @Param('name') name:string
+  ):Promise<FindByProductNameResponse>{
+    return this.productService.findByName(name)
+  }
+
   @Get('/:id')
   findOne(
     @Param('id') id: string
   ): Promise<FindOneProductResponse> {
     return this.productService.findOne(id);
   }
+
 
   @Patch('/:id')
   update(

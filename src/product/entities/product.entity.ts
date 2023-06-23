@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Category, NumberBrews, NumberOfUnits, Unit } from '../../types';
+import { Category, NumberOfUnits, Unit } from '../../types';
 import { Basket } from '../../basket/entities/basket.entity';
 
 @Entity()
@@ -72,12 +72,11 @@ export class Product extends BaseEntity {
 
   @Column({
     type: 'float',
-    precision: 6,
+    precision: 3,
     scale: 2,
-    nullable: true,
-    default: null
+    default: 0
   })
-  promo: number | null;
+  promo: number;
 
   @Column({
     type: 'tinyint',
@@ -122,12 +121,11 @@ export class Product extends BaseEntity {
   timeBrew: string | null;
 
   @Column({
-    type: 'enum',
-    enum: NumberBrews,
+   length:50,
     nullable: true,
     default: null
   })
-  numberBrews: NumberBrews | null;
+  numberBrews: string | null;
 
   @Column({
     length: 100,

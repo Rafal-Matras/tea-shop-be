@@ -1,4 +1,4 @@
-import { Category, NumberBrews, NumberOfUnits, Unit } from '../../types';
+import { Category, NumberOfUnits, Unit } from '../../types';
 
 export class CreateProductDto {
   category: Category;
@@ -12,14 +12,14 @@ export class CreateProductDto {
   numberOfUnits: NumberOfUnits | null;
   state: number;
   new: 1 | 0;
-  promo: number | null;
+  promo: number ;
   onHomePage: 1 | 0;
   ingredients: string | null;
   countryOrigin: string | null;
   amountBrew: string | null;
   temperatureBrew: string | null;
   timeBrew: string | null;
-  numberBrews: NumberBrews | null;
+  numberBrews: string | null;
   storageMethod: string | null;
   coffeeSpecies: string | null;
   howToBrew: string | null;

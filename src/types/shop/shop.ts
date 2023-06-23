@@ -1,4 +1,4 @@
-import { Category, ProductInterface } from './product';
+import { ProductInterface } from './product';
 
 export type ProductsList = Omit<ProductInterface, 'description' | 'forGift' | 'state' | 'onHomePage' | 'ingredients' | 'countryOrigin' | 'amountBrew' | 'temperatureBrew' | 'timeBrew' | 'numberBrews' | 'wayStore' | 'coffeeSpecies' | 'howToBrew' | 'capacity' | 'size'>
 

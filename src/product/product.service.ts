@@ -4,11 +4,14 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import { Product } from './entities/product.entity';
+import { User } from '../user/entities/user.entity';
+import { filterUserData } from '../utils/filterUserData';
 
 @Injectable()
 export class ProductService {
 
-  async create(newProduct: CreateProductDto): Promise<Product> {
+  async create(newProduct: CreateProductDto): Promise<{ id: string }> {
+    console.log(newProduct);
     const {
       name,
       category,
@@ -34,7 +37,6 @@ export class ProductService {
       capacity,
       size
     } = newProduct;
-
     const product = new Product();
 
     product.name = name;
@@ -62,8 +64,11 @@ export class ProductService {
     product.size = size;
 
     await product.save();
+    // console.log(product);
 
-    return product;
+    return {
+      id: product.id
+    };
 
   }
 
@@ -154,5 +159,15 @@ export class ProductService {
     await product.remove();
 
     return id;
+  }
+
+  async findByName(name: string) {
+    const product = await Product.findOne({
+      where: {
+        name
+      }
+    });
+
+    return product ? { ok: true } : { ok: false };
   }
 }

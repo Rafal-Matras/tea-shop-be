@@ -22,6 +22,7 @@ export interface OrderInterface {
   price: number;
   status: Status;
   formOfDelivery: Delivery;
+  deliveryCost:number;
   trackingNumber: string;
 }
 
