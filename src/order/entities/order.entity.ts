@@ -41,6 +41,13 @@ export class Order extends BaseEntity {
   formOfDelivery:Delivery;
 
   @Column({
+    type: 'float',
+    precision: 4,
+    scale: 2
+  })
+  deliveryCost:number;
+
+  @Column({
     length:30,
     nullable:true,
     default:null,

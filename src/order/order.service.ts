@@ -21,6 +21,7 @@ export class OrderService {
     const {
       price,
       formOfDelivery,
+      deliveryCost,
       userId,
       email,
       orderList,
@@ -54,6 +55,7 @@ export class OrderService {
 
     const order = new Order();
     order.orderNumber = orderNumber;
+    order.deliveryCost=deliveryCost;
     order.price = price;
     order.formOfDelivery = formOfDelivery;
 
@@ -111,6 +113,7 @@ export class OrderService {
   async findAll(id: string): Promise<Order[]> {
     return await Order
       .createQueryBuilder('order')
+      .leftJoinAndSelect('order.details','details')
       .where('order.userId = :id', { id })
       .getMany();
 

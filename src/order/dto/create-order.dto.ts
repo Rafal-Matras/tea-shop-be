@@ -3,6 +3,7 @@ import { Delivery, DocumentType } from '../../types';
 export class CreateOrderDto {
   price: number;
   formOfDelivery: Delivery;
+  deliveryCost:number;
   orderList: string;
   userId:string | null;
   email:string;
