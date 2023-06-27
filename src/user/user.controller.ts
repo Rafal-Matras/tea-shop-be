@@ -29,6 +29,7 @@ export class UserController {
   }
 
   @Get('/')
+  @UseGuards(AuthGuard('jwt'))
   findAll(): Promise<FindAllUserResponse> {
     return this.userService.findAll();
   }
