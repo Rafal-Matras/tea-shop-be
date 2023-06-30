@@ -11,7 +11,8 @@ import { MailModule } from '../mail/mail.module';
     MailModule,
   ],
   controllers: [BasketController],
-  providers: [BasketService]
+  providers: [BasketService],
+  exports: [BasketService]
 })
 export class BasketModule {
 }

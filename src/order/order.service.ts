@@ -8,12 +8,16 @@ import { Order } from './entities/order.entity';
 import { User } from '../user/entities/user.entity';
 import { Details } from './entities/details.entity';
 import { MailService } from '../mail/mail.service';
+import { BasketService } from '../basket/basket.service';
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class OrderService {
 
   constructor(
-    @Inject(MailService) private mailService: MailService
+    @Inject(MailService) private mailService: MailService,
+    @Inject(ProductService) private productService: ProductService,
+    @Inject(BasketService) private basketService: BasketService,
   ) {
   }
 
@@ -43,7 +47,7 @@ export class OrderService {
       deliveryFlatNumber,
       deliveryPostCode,
       deliveryCity
-    } = createOrder;
+    } = createOrder.dataOrder;
     const date = new Date();
     const dateYear = date.getFullYear().toString().slice(2);
     const dateMonth = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
@@ -55,7 +59,7 @@ export class OrderService {
 
     const order = new Order();
     order.orderNumber = orderNumber;
-    order.deliveryCost=deliveryCost;
+    order.deliveryCost = deliveryCost;
     order.price = price;
     order.formOfDelivery = formOfDelivery;
 
@@ -71,6 +75,7 @@ export class OrderService {
 
       order.user = user;
       await order.save();
+      await this.basketService.removeMany(userId);
     }
 
     const details = new Details();
@@ -96,9 +101,12 @@ export class OrderService {
     details.deliveryCity = deliveryCity;
 
     await details.save();
-
     order.details = details;
     await order.save();
+    for (const item of createOrder.basket) {
+      const newProductState = item.product.state - item.count * item.packSize * item.product.numberOfUnits;
+      await this.productService.changeState(item.product.id, newProductState);
+    }
 
     await this.mailService.buyItems(email, {
       user: name
@@ -113,7 +121,7 @@ export class OrderService {
   async findAll(id: string): Promise<Order[]> {
     return await Order
       .createQueryBuilder('order')
-      .leftJoinAndSelect('order.details','details')
+      .leftJoinAndSelect('order.details', 'details')
       .where('order.userId = :id', { id })
       .getMany();
 

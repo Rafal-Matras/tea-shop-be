@@ -11,7 +11,6 @@ import { filterUserData } from '../utils/filterUserData';
 export class ProductService {
 
   async create(newProduct: CreateProductDto): Promise<{ id: string }> {
-    console.log(newProduct);
     const {
       name,
       category,
@@ -64,7 +63,6 @@ export class ProductService {
     product.size = size;
 
     await product.save();
-    // console.log(product);
 
     return {
       id: product.id
@@ -74,7 +72,6 @@ export class ProductService {
 
   async findAll(): Promise<Product[]> {
     return await Product.find();
-
   }
 
   async findOne(id: string): Promise<Product> {
@@ -147,6 +144,16 @@ export class ProductService {
     await product.save();
 
     return product;
+  }
+
+  async changeState(id: string, newState: number) {
+    const product = await Product.findOne({
+      where: {
+        id
+      }
+    });
+    product.state = newState;
+    await product.save();
   }
 
   async remove(id: string): Promise<string> {
