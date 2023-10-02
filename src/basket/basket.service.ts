@@ -104,5 +104,4 @@ export class BasketService {
 
     return price;
   }
-
 }

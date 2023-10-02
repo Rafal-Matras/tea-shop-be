@@ -27,7 +27,6 @@ export class MailService {
   }
 
   async buyItems(to: string, context: BuyItems): Promise<void> {
-    console.log(to);
     await this.mailerService.sendMail({
       to,
       subject: 'Herbaciany Zakątek - Zakupiono produkty',
@@ -35,4 +34,5 @@ export class MailService {
       context
     });
   }
+
 }

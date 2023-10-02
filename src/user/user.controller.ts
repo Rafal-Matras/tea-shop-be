@@ -42,10 +42,10 @@ export class UserController {
   }
 
   @Get('/forgot-password/:email')
-  forgetPassword(
+  forgotPassword(
     @Param('email') email: string
   ):Promise<ForgotPasswordResponse> {
-    return this.userService.forgetPassword(email)
+    return this.userService.forgotPassword(email)
   }
 
   @Get('/:id')

@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+
 import { ProductsList } from './types';
+
 import { Product } from './product/entities/product.entity';
 
 @Injectable()
@@ -11,7 +13,6 @@ export class AppService {
       .select(selectedProducts)
       .where('product.onHomePage = :onHomePage', { onHomePage: 1 })
       .getMany();
-
 
   }
 }

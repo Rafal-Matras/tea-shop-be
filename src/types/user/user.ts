@@ -57,5 +57,7 @@ export type FindOneUserResponse = {
   ok: false
 };
 export type RemoveUserResponse = { ok: boolean };
-export type ForgotPasswordResponse = { ok: boolean };
+export type ForgotPasswordResponse = {
+  ok: boolean
+};
 

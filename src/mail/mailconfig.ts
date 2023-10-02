@@ -5,10 +5,10 @@ import { config } from '../config/config';
 export = {
   transport: `smtp://${config.mailUserName}:${config.mailPassword}@${config.mailHost}:${config.mailPort}`,
   defaults: {
-    from: config.mailEmail
+    from: `test@mail.com`
   },
   template: {
-    dir: join(__dirname,'../../src/mail/templates'),
+    dir: join(__dirname,'templates'),
     adapter: new HandlebarsAdapter(),
     options: {
       strict: true

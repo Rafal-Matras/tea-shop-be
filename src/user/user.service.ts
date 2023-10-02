@@ -1,8 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { DeliveryUserInterface, FindOneUserResponse, UserResponse } from '../types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdatePwdUserDto } from './dto/update-pwd-user.dto';
 
 import { User } from './entities/user.entity';
 import { Delivery } from './entities/delivery.entity';
@@ -11,7 +12,6 @@ import { hashPwd } from 'src/utils/hashPwd';
 import { filterUserData } from '../utils/filterUserData';
 import { MailService } from '../mail/mail.service';
 import { config } from '../config/config';
-import { UpdatePwdUserDto } from './dto/update-pwd-user.dto';
 
 @Injectable()
 export class UserService {
@@ -22,7 +22,6 @@ export class UserService {
   }
 
   async editDetails(user: User, deliveryDto: DeliveryUserInterface) {
-    console.log('tu details');
     const {
       deliveryName,
       deliverySurName,
@@ -143,17 +142,15 @@ export class UserService {
     };
   }
 
-  async forgetPassword(email: string): Promise<{ ok: boolean }> {
+  async forgotPassword(email: string): Promise<{ ok: boolean }> {
     const user = await User.findOne({
       where: {
         email
       }
     });
-    if (!user) throw new NotFoundException();
-
+    if (!user) return {ok:false};
     user.forgotPwdExpiredAt = new Date(new Date().getTime() + 1000 * 60 * 10);
     await user.save();
-
     await this.mailService.forgotPassword(user.email, {
       user: user.name,
       forgotPasswordUrl: `${config.feUrl}/user/forgot-password/${encodeURIComponent(user.id)}`
@@ -188,7 +185,6 @@ export class UserService {
     if (user.email !== email) {
       const a = await this.findOneByEmail(email);
       if (a.ok) {
-        console.log('email-is');
         return;
       }
       user.email = email ?? user.email;
@@ -209,8 +205,6 @@ export class UserService {
     await user.save();
 
     if (updateUser.deliveryDto.deliveryName !== '') await this.editDetails(user, updateUser.deliveryDto);
-
-    console.log('tu---');
 
     return filterUserData(user);
   }
